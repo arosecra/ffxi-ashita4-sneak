@@ -6,7 +6,6 @@ addon.desc      = '';
 addon.link      = '';
 
 require('common');
-local jobs = require('org_github_arosecra/jobs');
 
 ashita.events.register('load', 'sneak_load_callback1', function ()
     print("[sneak] 'load' event was called.");
@@ -28,13 +27,13 @@ local function is_alpha_first_mage()
     local player_name = party:GetMemberName(0);
     for i=0,5 do
         local name = party:GetMemberName(i);
-        local mainjob = jobs[party:GetMemberMainJob(i)];
-        local subjob = jobs[party:GetMemberSubJob(i)];
+		local mainjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", party:GetMemberMainJob(i));
+		local subjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", party:GetMemberSubJob(i));
         if mainjob ~= nil then
             print(mainjob)
-            if mainjob == "White_Mage" or
-                   mainjob == "Red_Mage" or
-                   mainjob == "Scholar" then
+            if mainjob == "WHM" or
+                   mainjob == "RDM" or
+                   mainjob == "SCH" then
                 mainjob_mages = mainjob_mages + 1
 
                 if alphabetically_highest_main_mage_name == nil or
@@ -42,9 +41,9 @@ local function is_alpha_first_mage()
                     alphabetically_highest_main_mage_name = name;
                 end
             end
-            if subjob == "White_Mage" or
-               subjob == "Red_Mage" or
-               subjob == "Scholar" then
+            if subjob == "WHM" or
+               subjob == "RDM" or
+               subjob == "SCH" then
                 subjob_mages = subjob_mages + 1
 
                 if alphabetically_highest_sub_mage_name == nil or
@@ -52,14 +51,14 @@ local function is_alpha_first_mage()
                     alphabetically_highest_sub_mage_name = name;
                 end
             end
-            if mainjob ~= "Dancer" and
-                subjob ~= "Dancer" and
-                mainjob ~= "White_Mage" and
-                subjob ~= "White_Mage" and
-                mainjob ~= "Red_Mage" and
-                subjob ~= "Red_Mage" and
-                mainjob ~= "Scholar" and
-                subjob ~= "Scholar" then
+            if mainjob ~= "DNC" and
+                subjob ~= "DNC" and
+                mainjob ~= "WHM" and
+                subjob ~= "WHM" and
+                mainjob ~= "RDM" and
+                subjob ~= "RDM" and
+                mainjob ~= "SCH" and
+                subjob ~= "SCH" then
                 non_self_sneakers = non_self_sneakers + 1;
             end
         end
@@ -73,7 +72,7 @@ local function is_alpha_first_mage()
             alphabetically_highest_sub_mage_name == player_name);
 end
 
-local function sneak_invis_dancer()
+local function sneak_invis_DNC()
     AshitaCore:GetChatManager():QueueCommand(1, '/ja "Spectral Jig" <me>');
 end
 
@@ -93,16 +92,16 @@ local function sneak_invis_mage()
         local party = memoryManager:GetParty();
         for i=1,5 do
             local name = party:GetMemberName(i);
-            local mainjob = jobs[party:GetMemberMainJob(i)];
-            local subjob = jobs[party:GetMemberSubJob(i)];
-            if mainjob ~= "Dancer" and
-               subjob ~= "Dancer" and
-               mainjob ~= "White_Mage" and
-               subjob ~= "White_Mage" and
-               mainjob ~= "Red_Mage" and
-               subjob ~= "Red_Mage" and
-               mainjob ~= "Scholar" and
-               subjob ~= "Scholar" then
+			local mainjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", party:GetMemberMainJob(i));
+			local subjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", party:GetMemberSubJob(i));
+            if mainjob ~= "DNC" and
+               subjob ~= "DNC" and
+               mainjob ~= "WHM" and
+               subjob ~= "WHM" and
+               mainjob ~= "RDM" and
+               subjob ~= "RDM" and
+               mainjob ~= "SCH" and
+               subjob ~= "SCH" then
                 sneak_invis_spell(name);
                 coroutine.sleep(10);
             end
@@ -117,18 +116,18 @@ ashita.events.register('command', 'sneak_command_callback1', function (e)
     if (e.command == '/sneak') then
         local memoryManager = AshitaCore:GetMemoryManager();
         local party = memoryManager:GetParty();
-        local mainjob = jobs[party:GetMemberMainJob(0)];
-        local subjob = jobs[party:GetMemberSubJob(0)];
+		local mainjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", party:GetMemberMainJob(0));
+		local subjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", party:GetMemberSubJob(0));
         
-        if mainjob == "Dancer" or
-            subjob == "Dancer" then
-            sneak_invis_dancer();
-        elseif mainjob == "White_Mage" or
-            subjob == "White_Mage" or
-            mainjob == "Red_Mage" or
-            subjob == "Red_Mage" or
-            mainjob == "Scholar" or
-            subjob == "Scholar" then
+        if mainjob == "DNC" or
+            subjob == "DNC" then
+            sneak_invis_DNC();
+        elseif mainjob == "WHM" or
+            subjob == "WHM" or
+            mainjob == "RDM" or
+            subjob == "RDM" or
+            mainjob == "SCH" or
+            subjob == "SCH" then
             sneak_invis_mage();
         end
         e.blocked = true;
